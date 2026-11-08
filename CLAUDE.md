@@ -27,6 +27,8 @@ read the same tokens.
 
 ## Commands
 
+- Use the Bun version `package.json` pins (`packageManager`): a newer Bun writes a `bun.lock` the pinned one can't
+  read, and CI's `bun install --frozen-lockfile` fails. `npx bun@<version> install` runs the pinned one.
 - `bun install`, then `bun run check` (build → typecheck → lint → test → format check). `bun run dev` serves the
   playground.
 - `bun run generate:rune-theme` after any change to `tokens.css`; `bun run check:rune-theme` fails when the Rune
