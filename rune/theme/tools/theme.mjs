@@ -5,7 +5,7 @@
 // usage: node rune/theme/tools/theme.mjs           writes the files
 //        node rune/theme/tools/theme.mjs --check   fails if they're out of date (CI)
 //
-// Needs Playwright with Chromium (`require("playwright")`).
+// Needs Playwright with Chromium (`bunx playwright install chromium`), or CHROMIUM_PATH set to a Chromium binary.
 
 import { readFileSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
@@ -39,7 +39,10 @@ const colorTokens = tokens.filter(
 
 const require = createRequire(import.meta.url);
 const { chromium } = require("playwright");
-const browser = await chromium.launch();
+// CHROMIUM_PATH picks a browser other than the one Playwright installed (as Rune's own scripts allow).
+const browser = await chromium.launch({
+  executablePath: process.env.CHROMIUM_PATH || undefined,
+});
 const page = await browser.newPage();
 await page.setContent(`<!doctype html><style>${css}</style><body></body>`);
 

@@ -1,0 +1,118 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # The web package and the playground: build, typecheck, lint, test and format check (`bun run check`).
+  web:
+    name: Web
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Vitest runs under Node; jsdom 30 needs Node ^22.22.2 || ^24.15.0, and the Vite plugin Node's type stripping.
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: package.json
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Check
+        run: bun run check
+
+  # The Rune theme's colours are generated from tokens.css by a browser; this fails when they're out of date.
+  rune-theme:
+    name: Rune theme in step with tokens.css
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: package.json
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Install Chromium
+        run: bunx playwright install --with-deps chromium
+
+      - name: Check the generated schemes
+        run: bun run check:rune-theme
+
+  # The Rune workspace (rune/): formatting, lints and tests, then the gallery rendered headless on lavapipe (Mesa's
+  # software Vulkan), every scheme light and dark, so a PR shows what it changes.
+  rune:
+    name: Rune
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    defaults:
+      run:
+        working-directory: rune
+    env:
+      VK_ICD_FILENAMES: /usr/share/vulkan/icd.d/lvp_icd.json
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Rune links libxkbcommon and libwayland-client; its headless renders need a Vulkan driver.
+      - name: Install the system libraries
+        working-directory: .
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libxkbcommon-dev libwayland-dev libxkbcommon-x11-0 mesa-vulkan-drivers
+
+      # rustup reads the channel and components from rune/rust-toolchain.toml.
+      - name: Install the Rust toolchain
+        run: rustup toolchain install
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2.9.2
+        with:
+          workspaces: rune
+
+      - name: Format
+        run: cargo fmt --check
+
+      - name: Lint
+        run: cargo clippy --all-targets -- -D warnings
+
+      - name: Test
+        run: cargo test
+
+      - name: Render the gallery
+        run: scripts/render.sh "${{ runner.temp }}/rune-renders"
+
+      - name: Upload the renders
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rune-renders
+          path: ${{ runner.temp }}/rune-renders/*.png
+          if-no-files-found: error
