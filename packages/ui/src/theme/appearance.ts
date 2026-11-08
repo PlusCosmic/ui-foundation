@@ -4,34 +4,30 @@
  * before first paint (the `appearance` Vite plugin injects it), so nobody sees a flash of the wrong colours.
  */
 
+import {
+  type AppearanceKeys,
+  type ColorScheme,
+  appearanceKeys,
+  colorSchemes,
+  darkSchemeQuery,
+  defaultColorScheme,
+  defaultStorageKey,
+  themeScript,
+} from "./schemes.js";
+
+export {
+  type AppearanceKeys,
+  type ColorScheme,
+  appearanceKeys,
+  colorSchemes,
+  darkSchemeQuery,
+  defaultColorScheme,
+  defaultStorageKey,
+  themeScript,
+};
+
 export type Theme = "light" | "dark";
 export type ThemePreference = Theme | "system";
-
-/** The schemes, in the order the scheme picker shows them; styles/tokens.css defines the same ones. */
-export const colorSchemes = [
-  "stacks",
-  "oxblood",
-  "ink",
-  "walnut",
-  "graphite",
-] as const;
-export type ColorScheme = (typeof colorSchemes)[number];
-export const defaultColorScheme: ColorScheme = "stacks";
-
-export const darkSchemeQuery = "(prefers-color-scheme: dark)";
-
-/** Where an app keeps its appearance in local storage. Give each app its own prefix. */
-export type AppearanceKeys = { theme: string; colorScheme: string };
-
-export const defaultStorageKey = "ui";
-
-export function appearanceKeys(prefix = defaultStorageKey): AppearanceKeys {
-  return {
-    // Only an explicit pick is stored; until then the OS setting is followed.
-    theme: `${prefix}-theme-preference`,
-    colorScheme: `${prefix}-color-scheme`,
-  };
-}
 
 export function isColorScheme(value: unknown): value is ColorScheme {
   return (colorSchemes as readonly unknown[]).includes(value);
@@ -90,26 +86,4 @@ export function applyColorScheme(scheme: ColorScheme) {
   } else {
     document.documentElement.dataset.colorScheme = scheme;
   }
-}
-
-/**
- * The inline script that applies the stored theme and scheme before first paint. It is built from the same keys
- * and scheme list as the provider, so the two can't drift apart.
- */
-export function themeScript(prefix = defaultStorageKey): string {
-  const keys = appearanceKeys(prefix);
-  const others = colorSchemes.filter((scheme) => scheme !== defaultColorScheme);
-  return [
-    "try {",
-    `  var theme = localStorage.getItem(${JSON.stringify(keys.theme)});`,
-    '  if (theme !== "light" && theme !== "dark") {',
-    `    theme = matchMedia(${JSON.stringify(darkSchemeQuery)}).matches ? "dark" : "light";`,
-    "  }",
-    "  document.documentElement.dataset.theme = theme;",
-    `  var scheme = localStorage.getItem(${JSON.stringify(keys.colorScheme)});`,
-    `  if (${JSON.stringify(others)}.indexOf(scheme) !== -1) {`,
-    "    document.documentElement.dataset.colorScheme = scheme;",
-    "  }",
-    "} catch (error) {}",
-  ].join("\n");
 }

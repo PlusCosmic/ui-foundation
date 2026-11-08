@@ -344,16 +344,16 @@ mod tests {
 
     #[test]
     fn scheme_names_match_the_web_package() {
-        let ts = include_str!("../../../packages/ui/src/theme/appearance.ts");
+        let ts = include_str!("../../../packages/ui/src/theme/schemes.js");
         let list = &ts[ts
             .find("colorSchemes = [")
-            .expect("appearance.ts lists the schemes")..];
+            .expect("schemes.js lists the schemes")..];
         let list = &list[..list.find(']').unwrap()];
         let web: Vec<&str> = list.split('"').skip(1).step_by(2).collect();
         let rune: Vec<&str> = ColorScheme::ALL.iter().map(|s| s.name()).collect();
         assert_eq!(
             web, rune,
-            "ColorScheme::ALL and the web's colorSchemes name the same schemes in the same order"
+            "ColorScheme::ALL and the web's colorSchemes (schemes.js) name the same schemes in the same order"
         );
         assert_eq!(ColorScheme::from_name("green"), ColorScheme::Stacks);
     }

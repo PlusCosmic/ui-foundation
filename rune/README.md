@@ -33,7 +33,7 @@ node rune/theme/tools/theme.mjs
 ```
 
 `--check` fails when the JSON is out of date; run it in CI beside `bun run check`. Change a colour in `tokens.css`,
-regenerate, and both platforms follow. The crate's tests also fail if the scheme list drifts from `appearance.ts`.
+regenerate, and both platforms follow. The crate's tests also fail if the scheme list drifts from `schemes.js`.
 
 ## Using it
 

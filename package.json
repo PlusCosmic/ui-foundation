@@ -16,7 +16,8 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,js,md,css,json}\"",
     "check": "bun run build && bun run typecheck && bun run lint && bun run test && bun run format:check",
     "check:rune-theme": "node rune/theme/tools/theme.mjs --check",
-    "generate:rune-theme": "node rune/theme/tools/theme.mjs"
+    "generate:rune-theme": "node rune/theme/tools/theme.mjs",
+    "check:package": "scripts/check-package.sh"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

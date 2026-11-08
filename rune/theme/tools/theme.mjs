@@ -14,16 +14,13 @@ import { fileURLToPath } from "node:url";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const tokensCss = resolve(here, "../../../packages/ui/src/styles/tokens.css");
-const appearanceTs = resolve(
-  here,
-  "../../../packages/ui/src/theme/appearance.ts",
-);
+const schemesJs = resolve(here, "../../../packages/ui/src/theme/schemes.js");
 const out = resolve(here, "../assets/schemes");
 const check = process.argv.includes("--check");
 
 const css = readFileSync(tokensCss, "utf8");
 const schemes = [
-  ...readFileSync(appearanceTs, "utf8")
+  ...readFileSync(schemesJs, "utf8")
     .match(/colorSchemes = \[([^\]]*)\]/)[1]
     .matchAll(/"(\w+)"/g),
 ].map((m) => m[1]);
