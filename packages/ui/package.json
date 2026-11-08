@@ -11,7 +11,10 @@
     "./styles.css": "./src/styles/index.css",
     "./tokens.css": "./src/styles/tokens.css",
     "./fonts.css": "./src/styles/fonts.css",
-    "./vite": "./src/vite.ts",
+    "./vite": {
+      "types": "./src/vite.d.ts",
+      "default": "./src/vite.js"
+    },
     "./eslint": "./eslint/index.js"
   },
   "files": [

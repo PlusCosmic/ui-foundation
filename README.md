@@ -35,10 +35,10 @@ bun run check
 
 ## Starting an app on it
 
-1. Depend on the package. While it lives in this repo, add it from git (or copy `packages/ui` into the app's
-   workspace); it ships TypeScript source, so the app needs a bundler that compiles dependencies (Vite does).
-2. `vite.config.ts`: `plugins: [react(), appearance({ storageKey: "myapp" })]` from `@pluscosmic/ui/vite`. The
-   plugin runs in Vite's config loader, so Node 22.18 or later.
+1. Depend on a release's tarball: each `ui-v<version>` tag publishes one as a GitHub release asset, so
+   `"@pluscosmic/ui": "https://github.com/PlusCosmic/ui-foundation/releases/download/ui-v0.1.0/pluscosmic-ui-0.1.0.tgz"`.
+   It ships TypeScript source, so the app needs a bundler that compiles dependencies (Vite does).
+2. `vite.config.ts`: `plugins: [react(), appearance({ storageKey: "myapp" })]` from `@pluscosmic/ui/vite`.
 3. Entry: import `@pluscosmic/ui/fonts.css` and `@pluscosmic/ui/styles.css`, then wrap the app in
    `<AppearanceProvider storageKey="myapp">` and `<ToastProvider>`.
 4. Chrome: `<AppShell brand={…} nav={<Nav>{router links}</Nav>} actions={<ProfileMenu …/>}>`. Router links that set
@@ -52,7 +52,7 @@ The playground (`apps/playground/src/main.tsx`, `App.tsx`) is all of this in abo
 
 - **A token's value**: edit it in every scheme's light and dark block of `tokens.css`. The test in
   `theme/appearance.test.ts` fails if a scheme misses a token the default has.
-- **A new scheme**: add its name to `colorSchemes` in `theme/appearance.ts`, its two blocks to `tokens.css` and its
+- **A new scheme**: add its name to `colorSchemes` in `theme/schemes.js`, its two blocks to `tokens.css` and its
   words to `copy/ui.ts`. The first-paint script picks it up from the list.
 - **An app's own tokens** (say, a chart palette): define them in the app's CSS under the same selectors, beside the
   foundation's.
@@ -62,3 +62,10 @@ The playground (`apps/playground/src/main.tsx`, `App.tsx`) is all of this in abo
 
 `rune/` carries the same look to native apps built with Rune: a `rune-kit` theme crate whose colours are generated
 from `tokens.css`, and a gallery. See `rune/README.md`.
+
+## Releasing
+
+Bump `version` in `packages/ui/package.json` in a PR, merge it, then tag `main` with `ui-v<that version>` and push
+the tag. `.github/workflows/release-ui.yml` checks the tag matches the version, runs the checks and the package
+check, packs `packages/ui` and publishes the tarball as the release's asset. Apps move to it by changing the version
+in their dependency's URL.

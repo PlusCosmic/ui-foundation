@@ -39,6 +39,22 @@ jobs:
       - name: Check
         run: bun run check
 
+  # The packed package installed into a fresh Vite app outside the workspace, as apps get it from a release.
+  package:
+    name: Package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Check the packed package in a fresh app
+        run: scripts/check-package.sh
+
   # The Rune theme's colours are generated from tokens.css by a browser; this fails when they're out of date.
   rune-theme:
     name: Rune theme in step with tokens.css

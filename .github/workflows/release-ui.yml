@@ -1,0 +1,64 @@
+name: Release @pluscosmic/ui
+
+# A `ui-v<version>` tag on main publishes packages/ui as a tarball on a GitHub release, which apps depend on by URL
+# (README.md, "Releasing"). The tag must match packages/ui/package.json's version.
+on:
+  push:
+    tags:
+      - "ui-v*"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-ui-${{ github.ref }}
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: package.json
+
+      - name: Check the tag matches the package's version
+        run: |
+          version="$(node -p 'require("./packages/ui/package.json").version')"
+          if [ "${GITHUB_REF_NAME}" != "ui-v${version}" ]; then
+            echo "::error::Tag ${GITHUB_REF_NAME} doesn't match packages/ui/package.json's version ${version} (expected ui-v${version})."
+            exit 1
+          fi
+          echo "VERSION=${version}" >> "$GITHUB_ENV"
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Check
+        run: bun run check
+
+      - name: Pack
+        run: |
+          mkdir -p dist-release
+          (cd packages/ui && npm pack --pack-destination ../../dist-release)
+          ls -l dist-release
+
+      - name: Check the packed package in a fresh app
+        run: scripts/check-package.sh "dist-release/pluscosmic-ui-${VERSION}.tgz"
+
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" "dist-release/pluscosmic-ui-${VERSION}.tgz" \
+            --title "@pluscosmic/ui ${VERSION}" \
+            --notes "Depend on it with \`\"@pluscosmic/ui\": \"https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/pluscosmic-ui-${VERSION}.tgz\"\`."
