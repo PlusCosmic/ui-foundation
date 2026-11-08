@@ -1,0 +1,17 @@
+# The foundation's look for Rune apps: the theme crate and a gallery that renders every scheme headless.
+[workspace]
+resolver = "3"
+members = ["theme", "gallery"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.99.1"
+publish = false
+
+[workspace.dependencies]
+# Pinned to one `dev` revision, the same one Reelshelf's desktop app uses; move it forward one bump at a time with
+# the gallery's renders attached.
+rune = { git = "https://github.com/anomalyco/rune", rev = "cd36f5a9917ec4a65786caf69213c9cc32919984" }
+rune-kit = { git = "https://github.com/anomalyco/rune", rev = "cd36f5a9917ec4a65786caf69213c9cc32919984" }
+serde_json = "1.0.154"

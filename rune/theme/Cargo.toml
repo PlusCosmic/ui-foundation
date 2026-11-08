@@ -1,0 +1,12 @@
+[package]
+name = "rune-theme-foundation"
+description = "The foundation's design language (@pluscosmic/ui's tokens, schemes and fonts) as a rune-kit theme."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[dependencies]
+rune.workspace = true
+rune-kit.workspace = true
+serde_json.workspace = true

@@ -1,0 +1,12 @@
+[package]
+name = "foundation-gallery"
+description = "The playground's components in Rune, on the foundation's theme; renders every scheme headless."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[dependencies]
+rune.workspace = true
+rune-kit.workspace = true
+rune-theme-foundation = { path = "../theme" }

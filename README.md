@@ -57,3 +57,8 @@ The playground (`apps/playground/src/main.tsx`, `App.tsx`) is all of this in abo
 - **An app's own tokens** (say, a chart palette): define them in the app's CSS under the same selectors, beside the
   foundation's.
 - **Class names** all start `ui-`. App styles that only adjust a component (`.my-toolbar .ui-button`) sit in the app.
+
+## Rune
+
+`rune/` carries the same look to native apps built with Rune: a `rune-kit` theme crate whose colours are generated
+from `tokens.css`, and a gallery. See `rune/README.md`.
