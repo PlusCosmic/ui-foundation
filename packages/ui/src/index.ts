@@ -79,6 +79,9 @@ export { Select, type SelectOption } from "./components/Select";
 export {
   type Toast,
   type ToastAction,
+  ToastButton,
+  ToastCard,
+  ToastLayer,
   ToastProvider,
   useToast,
 } from "./components/Toast";

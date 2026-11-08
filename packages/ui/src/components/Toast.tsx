@@ -50,7 +50,6 @@ const DEFAULT_DURATION = 10_000;
  * but never from under a pointer or keyboard focus, and a newer toast replaces an older one.
  */
 export function ToastProvider({ children }: { children: ReactNode }) {
-  const copy = useUiCopy();
   const [toast, setToast] = useState<(Toast & { id: number }) | null>(null);
   const [held, setHeld] = useState(false);
   const [running, setRunning] = useState(false);
@@ -96,47 +95,117 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   return (
     <ToastContext.Provider value={api}>
       {children}
-      <div
-        className="ui-toast-layer"
-        role="status"
-        aria-live="polite"
-        onPointerEnter={() => setHeld(true)}
-        onPointerLeave={() => setHeld(false)}
-        onFocus={() => setHeld(true)}
-        onBlur={() => setHeld(false)}
-      >
+      <ToastLayer onHeldChange={setHeld}>
         {toast ? (
-          <div
+          <ToastCard
             key={toast.id}
-            className={cx("ui-toast", toast.tone === "error" && "error")}
+            tone={toast.tone}
+            icon={toast.icon}
+            message={toast.message}
+            onClose={() => close(toast.id)}
           >
-            {toast.icon}
-            <span className="ui-toast-message">{toast.message}</span>
             {toast.action ? (
-              <button
-                type="button"
-                className="ui-toast-action"
+              <ToastButton
                 onClick={() => void runAction(toast)}
                 disabled={running}
+                icon={toast.action.icon}
+                hint={toast.action.hint}
               >
-                {toast.action.icon}
                 {toast.action.label}
-                {toast.action.hint ? <Kbd>{toast.action.hint}</Kbd> : null}
-              </button>
+              </ToastButton>
             ) : null}
             {toast.extra}
-            <button
-              type="button"
-              className="ui-icon-button ui-toast-close"
-              aria-label={copy.toast.dismiss}
-              onClick={() => close(toast.id)}
-            >
-              <IconX size={14} aria-hidden="true" />
-            </button>
-          </div>
+          </ToastCard>
         ) : null}
-      </div>
+      </ToastLayer>
     </ToastContext.Provider>
+  );
+}
+
+/**
+ * The pieces `ToastProvider` draws with, for an app whose toast keeps its own state (several kinds of news, an undo
+ * that runs from a shortcut too). The layer is the live region and tells its owner while a pointer or focus is on it,
+ * so the toast can wait.
+ */
+export function ToastLayer({
+  children,
+  onHeldChange,
+}: {
+  children?: ReactNode;
+  onHeldChange?: (held: boolean) => void;
+}) {
+  return (
+    <div
+      className="ui-toast-layer"
+      role="status"
+      aria-live="polite"
+      onPointerEnter={() => onHeldChange?.(true)}
+      onPointerLeave={() => onHeldChange?.(false)}
+      onFocus={() => onHeldChange?.(true)}
+      onBlur={() => onHeldChange?.(false)}
+    >
+      {children}
+    </div>
+  );
+}
+
+/** One toast: its icon, message, whatever controls follow, and the close button. */
+export function ToastCard({
+  tone = "neutral",
+  icon,
+  message,
+  children,
+  onClose,
+}: {
+  tone?: "neutral" | "error";
+  icon?: ReactNode;
+  message: ReactNode;
+  children?: ReactNode;
+  onClose: () => void;
+}) {
+  const copy = useUiCopy();
+  return (
+    <div className={cx("ui-toast", tone === "error" && "error")}>
+      {icon}
+      <span className="ui-toast-message">{message}</span>
+      {children}
+      <button
+        type="button"
+        className="ui-icon-button ui-toast-close"
+        aria-label={copy.toast.dismiss}
+        onClick={onClose}
+      >
+        <IconX size={14} aria-hidden="true" />
+      </button>
+    </div>
+  );
+}
+
+/** A toast's action, such as Undo, with an optional shortcut beside its label. */
+export function ToastButton({
+  children,
+  icon,
+  hint,
+  onClick,
+  disabled,
+}: {
+  children: ReactNode;
+  icon?: ReactNode;
+  hint?: ReactNode;
+  onClick: () => void;
+  disabled?: boolean;
+}) {
+  return (
+    <button
+      type="button"
+      className="ui-toast-action"
+      onClick={onClick}
+      disabled={disabled}
+    >
+      {icon}
+      {children}
+      {hint ? <Kbd>{hint}</Kbd> : null}
+    </button>
   );
 }
 
