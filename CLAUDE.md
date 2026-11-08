@@ -26,7 +26,7 @@ read the same tokens.
     `theme/tools/theme.mjs` (Chromium resolves `oklch()`/`color-mix()`); never hand-edit it. `src/lib.rs` maps the
     tokens onto `rune-kit`'s `Kit`; `src/parts.rs` has the pieces `rune-kit` lacks (Notice, chip, avatar, …).
   - `gallery/` (`foundation-gallery`): the playground in Rune, one `--scene` per scheme and appearance.
-- `MIGRATING-REELSHELF.md` — the plan for moving Reelshelf onto the package.
+- `MIGRATING-REELSHELF.md` — how Reelshelf moved onto the package, and what stayed in it.
 
 ## Commands
 
