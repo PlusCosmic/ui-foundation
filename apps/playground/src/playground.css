@@ -1,4 +1,15 @@
-/* The playground's own layout; an app's page styles sit beside its components like this. */
+/* The playground's own layout; an app's page styles sit beside its components like this. The shell leaves the page's
+   padding to the app. */
+.pg-page {
+  padding: 32px;
+}
+
+@media (max-width: 900px) {
+  .pg-page {
+    padding: 24px 16px;
+  }
+}
+
 .pg-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(340px, 100%), 1fr));

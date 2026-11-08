@@ -74,22 +74,24 @@ export function App() {
         </ProfileMenu>
       }
     >
-      {page === "components" ? (
-        <ComponentsPage />
-      ) : (
-        <>
-          <PageHeader
-            eyebrow={copy.appearance.eyebrow}
-            title={copy.appearance.title}
-            description={copy.appearance.description}
-          />
-          <div className="ui-settings">
-            <SettingsSection title={copy.appearance.section}>
-              <AppearanceSettings />
-            </SettingsSection>
-          </div>
-        </>
-      )}
+      <div className="pg-page">
+        {page === "components" ? (
+          <ComponentsPage />
+        ) : (
+          <>
+            <PageHeader
+              eyebrow={copy.appearance.eyebrow}
+              title={copy.appearance.title}
+              description={copy.appearance.description}
+            />
+            <div className="ui-settings">
+              <SettingsSection title={copy.appearance.section}>
+                <AppearanceSettings />
+              </SettingsSection>
+            </div>
+          </>
+        )}
+      </div>
     </AppShell>
   );
 }

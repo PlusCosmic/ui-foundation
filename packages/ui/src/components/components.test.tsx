@@ -12,7 +12,13 @@ import { AppearanceSettings } from "./AppearanceSettings";
 import { Dialog } from "./Dialog";
 import { Notice } from "./Notice";
 import { Select } from "./Select";
-import { ToastProvider, useToast } from "./Toast";
+import {
+  ToastButton,
+  ToastCard,
+  ToastLayer,
+  ToastProvider,
+  useToast,
+} from "./Toast";
 
 beforeAll(() => {
   window.matchMedia = ((query: string) => ({
@@ -110,6 +116,29 @@ describe("Toast", () => {
     fireEvent.pointerLeave(layer);
     act(() => vi.advanceTimersByTime(1000));
     expect(screen.queryByText("Moved")).toBeNull();
+  });
+});
+
+describe("ToastLayer", () => {
+  it("says when it is held, and its card closes and acts", () => {
+    const held = vi.fn();
+    const close = vi.fn();
+    const undo = vi.fn();
+    render(
+      <ToastLayer onHeldChange={held}>
+        <ToastCard message="Moved" onClose={close}>
+          <ToastButton onClick={undo} hint="Ctrl+Z">
+            Undo
+          </ToastButton>
+        </ToastCard>
+      </ToastLayer>,
+    );
+    fireEvent.pointerEnter(screen.getByRole("status"));
+    expect(held).toHaveBeenLastCalledWith(true);
+    fireEvent.click(screen.getByText("Undo"));
+    expect(undo).toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: "Dismiss" }));
+    expect(close).toHaveBeenCalled();
   });
 });
 
