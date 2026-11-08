@@ -65,7 +65,8 @@ from `tokens.css`, and a gallery. See `rune/README.md`.
 
 ## Releasing
 
-Bump `version` in `packages/ui/package.json` in a PR, merge it, then tag `main` with `ui-v<that version>` and push
-the tag. `.github/workflows/release-ui.yml` checks the tag matches the version, runs the checks and the package
-check, packs `packages/ui` and publishes the tarball as the release's asset. Apps move to it by changing the version
-in their dependency's URL.
+Bump `version` in `packages/ui/package.json` in a PR and merge it. Then either push the tag `ui-v<that version>` on
+`main`, or start **Release @pluscosmic/ui** from the Actions tab on `main` with that version, which makes the tag
+itself. `.github/workflows/release-ui.yml` checks the version matches, runs the checks and the package check, packs
+`packages/ui` and publishes the tarball as the release's asset. Apps move to it by changing the version in their
+dependency's URL.

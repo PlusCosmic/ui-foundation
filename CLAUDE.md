@@ -41,7 +41,9 @@ read the same tokens.
 libxkbcommon-x11-0`, and `mesa-vulkan-drivers` (lavapipe) to render without a GPU.
 - CI (`.github/workflows/ci.yml`) runs Web, Package (`check:package`), the Rune theme check, and Rune (with the
   renders uploaded).
-- Releases: bump `packages/ui/package.json`'s `version` in a PR; once merged, push the tag `ui-v<version>` on `main`.
+- Releases: bump `packages/ui/package.json`'s `version` in a PR; once merged, push the tag `ui-v<version>` on `main`, or
+  start `release-ui.yml` on `main` with the version (`workflow_dispatch`, which makes the tag; for when tags can't be
+  pushed).
   `release-ui.yml` checks, packs and publishes the tarball as the release's asset; apps depend on its URL.
 
 ## Changing the look

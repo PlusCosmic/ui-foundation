@@ -1,17 +1,23 @@
 name: Release @pluscosmic/ui
 
-# A `ui-v<version>` tag on main publishes packages/ui as a tarball on a GitHub release, which apps depend on by URL
-# (README.md, "Releasing"). The tag must match packages/ui/package.json's version.
+# Publishes packages/ui as a tarball on a GitHub release, which apps depend on by URL (README.md, "Releasing"):
+# either push a `ui-v<version>` tag on main, or start it from Actions on main with the version, in which case the
+# release makes the tag on main's head. Either way the version must match packages/ui/package.json's.
 on:
   push:
     tags:
       - "ui-v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "The version to release, as in packages/ui/package.json (e.g. 0.1.0)"
+        required: true
 
 permissions:
   contents: write
 
 concurrency:
-  group: release-ui-${{ github.ref }}
+  group: release-ui
 
 jobs:
   release:
@@ -32,13 +38,25 @@ jobs:
           bun-version-file: package.json
 
       - name: Check the tag matches the package's version
+        env:
+          REQUESTED: ${{ inputs.version }}
         run: |
           version="$(node -p 'require("./packages/ui/package.json").version')"
-          if [ "${GITHUB_REF_NAME}" != "ui-v${version}" ]; then
-            echo "::error::Tag ${GITHUB_REF_NAME} doesn't match packages/ui/package.json's version ${version} (expected ui-v${version})."
+          if [ "${GITHUB_EVENT_NAME}" = "workflow_dispatch" ]; then
+            if [ "${GITHUB_REF_NAME}" != "main" ]; then
+              echo "::error::Start the release from main, not ${GITHUB_REF_NAME}."
+              exit 1
+            fi
+            tag="ui-v${REQUESTED}"
+          else
+            tag="${GITHUB_REF_NAME}"
+          fi
+          if [ "${tag}" != "ui-v${version}" ]; then
+            echo "::error::${tag} doesn't match packages/ui/package.json's version ${version} (expected ui-v${version})."
             exit 1
           fi
           echo "VERSION=${version}" >> "$GITHUB_ENV"
+          echo "TAG=${tag}" >> "$GITHUB_ENV"
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
@@ -58,7 +76,9 @@ jobs:
       - name: Publish the release
         env:
           GH_TOKEN: ${{ github.token }}
+        # --target makes the tag on this commit when it doesn't exist yet (a release started from Actions).
         run: |
-          gh release create "${GITHUB_REF_NAME}" "dist-release/pluscosmic-ui-${VERSION}.tgz" \
+          gh release create "${TAG}" "dist-release/pluscosmic-ui-${VERSION}.tgz" \
+            --target "${GITHUB_SHA}" \
             --title "@pluscosmic/ui ${VERSION}" \
-            --notes "Depend on it with \`\"@pluscosmic/ui\": \"https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/pluscosmic-ui-${VERSION}.tgz\"\`."
+            --notes "Depend on it with \`\"@pluscosmic/ui\": \"https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}/pluscosmic-ui-${VERSION}.tgz\"\`."
