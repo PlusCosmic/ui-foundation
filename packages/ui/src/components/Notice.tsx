@@ -7,9 +7,10 @@ import {
 } from "@tabler/icons-react";
 import { cx } from "./cx";
 
-export type NoticeTone = "info" | "success" | "warning" | "error";
+export type NoticeTone = "neutral" | "info" | "success" | "warning" | "error";
 
 const toneIcons = {
+  neutral: IconInfoCircle,
   info: IconInfoCircle,
   success: IconCircleCheck,
   warning: IconAlertTriangle,
@@ -17,8 +18,10 @@ const toneIcons = {
 } as const;
 
 /**
- * A message in one of four tones; the icon and the tinted edge carry the tone as well as the colour. `compact` is
- * the one-line form for under a form or inside a card. Errors are announced as alerts, the rest as status.
+ * A message in a tone (`neutral` grey, `info` blue, `success`, `warning`, `error`); the icon and the tinted edge carry
+ * the tone as well as the colour. `compact` is the one-line form for under a form or inside a card. Errors are
+ * announced as alerts, the rest as status. Plain text children go in a paragraph; elements (paragraphs, a row of
+ * actions) sit directly in the body, a gap apart.
  */
 export function Notice({
   tone = "info",
@@ -63,7 +66,11 @@ export function Notice({
       {shownIcon ? <span className="ui-notice-icon">{shownIcon}</span> : null}
       <div className="ui-notice-body">
         {title ? <p className="ui-notice-title">{title}</p> : null}
-        {children ? <div className="ui-notice-text">{children}</div> : null}
+        {typeof children === "string" || typeof children === "number" ? (
+          <p className="ui-notice-text">{children}</p>
+        ) : (
+          children
+        )}
         {actions ? <div className="ui-actions">{actions}</div> : null}
       </div>
     </div>

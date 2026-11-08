@@ -401,6 +401,7 @@
 
 /* ---- Notices: an icon and a tinted edge carry the tone as well as colour ---- */
 
+/* `neutral` (the default) is grey; the other tones set --tone below. */
 .ui-notice {
   --tone: var(--fg-soft);
   display: grid;
@@ -488,8 +489,9 @@
   border-color: color-mix(in oklab, var(--warning) 55%, var(--line));
 }
 
-/* Links in a notice take its colour, so underline them to show they're links. */
-.ui-notice a,
+/* Links in a notice's words take its colour, so underline them to show they're links; a button-like link in its
+   row of actions stays as it is. */
+.ui-notice p a,
 .ui-notice-compact a {
   text-decoration: underline;
   text-underline-offset: 2px;

@@ -10,6 +10,7 @@ import { UiCopyProvider } from "../copy/UiCopyProvider";
 import { AppearanceProvider } from "../theme/AppearanceProvider";
 import { AppearanceSettings } from "./AppearanceSettings";
 import { Dialog } from "./Dialog";
+import { Notice } from "./Notice";
 import { Select } from "./Select";
 import { ToastProvider, useToast } from "./Toast";
 
@@ -130,5 +131,46 @@ describe("AppearanceSettings", () => {
     ).toBe(true);
     expect(screen.getByRole("alert").textContent).toContain("didn't save");
     expect(document.documentElement.dataset.colorScheme).toBeUndefined();
+  });
+});
+
+describe("Notice", () => {
+  it("puts plain text in a paragraph and elements straight into the body", () => {
+    const { container, rerender } = render(
+      <Notice tone="neutral" title="Saved">
+        Words
+      </Notice>,
+    );
+    expect(
+      container.querySelector(".ui-notice-body > p.ui-notice-text")
+        ?.textContent,
+    ).toBe("Words");
+    rerender(
+      <Notice tone="neutral" title="Saved">
+        <p>One</p>
+        <div className="row">Two</div>
+      </Notice>,
+    );
+    expect(
+      container.querySelector(".ui-notice-body > p:not(.ui-notice-title)")
+        ?.textContent,
+    ).toBe("One");
+    expect(container.querySelector(".ui-notice-body > .row")).toBeTruthy();
+    expect(container.querySelector(".ui-notice-text")).toBeNull();
+  });
+
+  it("announces errors as alerts and the other tones as status", () => {
+    render(
+      <>
+        <Notice tone="error" compact>
+          Broken
+        </Notice>
+        <Notice tone="neutral" title="Fine" />
+      </>,
+    );
+    expect(screen.getByRole("alert").textContent).toBe("Broken");
+    expect(screen.getByRole("status").getAttribute("data-tone")).toBe(
+      "neutral",
+    );
   });
 });
