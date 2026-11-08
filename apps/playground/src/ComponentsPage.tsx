@@ -133,6 +133,9 @@ export function ComponentsPage() {
         </Section>
 
         <Section title={copy.notices.title}>
+          <Notice tone="neutral" title={copy.notices.neutral.title}>
+            {copy.notices.neutral.text}
+          </Notice>
           <Notice tone="info" title={copy.notices.info.title}>
             {copy.notices.info.text}
           </Notice>

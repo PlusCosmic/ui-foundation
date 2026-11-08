@@ -59,6 +59,10 @@ export const playgroundCopy = {
     },
     notices: {
       title: "Notices",
+      neutral: {
+        title: "Checking your payment",
+        text: "This usually takes a few seconds.",
+      },
       info: {
         title: "Your import is under way",
         text: "We'll let you know when it's done. You can leave this page.",
