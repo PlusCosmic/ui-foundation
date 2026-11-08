@@ -1,0 +1,4 @@
+/* The two families the tokens name: Instrument Sans for text, Fraunces (with its SOFT and WONK axes) for display. */
+@import "@fontsource-variable/instrument-sans";
+@import "@fontsource-variable/fraunces/full.css";
+@import "@fontsource-variable/fraunces/full-italic.css";

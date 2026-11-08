@@ -1,0 +1,275 @@
+/*
+ * Colour tokens. Stacks is the default and lives on :root; every other scheme redefines the colour tokens for light
+ * and dark under `data-color-scheme` on <html> (theme/appearance.ts names the same schemes). `data-theme` on <html>
+ * picks light or dark. Danger and warning are shared by every scheme.
+ *
+ * Tokens:
+ *   --bg, --bg-soft, --surface   page, recessed fields and tracks, raised cards
+ *   --fg, --fg-soft              text, secondary text
+ *   --line, --track-bg           borders, meter tracks
+ *   --accent, --accent-ink       the accent as text and thin marks, and its darker/lighter ink
+ *   --fill, --fill-ink           primary button fill and the text on it
+ *   --danger, --warning, --info  tones
+ *   --shadow, --scrim            bases for shadows and image scrims, mixed with transparent where used
+ *   --tip-bg, --tip-ink          tooltips and toasts
+ */
+
+/* Stacks: green-tinted. Green is the only accent; neutrals lean green, never cream. */
+:root {
+  color-scheme: light;
+  --bg: #eef2ee;
+  --bg-soft: #e3eae4;
+  --surface: #f8faf8;
+  --fg: #13261c;
+  --fg-soft: #4a5f53;
+  --line: #d3dcd4;
+  --track-bg: #c3cfc5;
+  /* Accent reads as text and thin marks; fill carries white text on buttons. */
+  --accent: #1f6b45;
+  --accent-ink: #185a39;
+  --fill: #1f6b45;
+  --fill-ink: #ffffff;
+  --danger: oklch(0.52 0.17 25);
+  /* Needs attention soon, as opposed to --danger's already wrong. */
+  --warning: oklch(0.7 0.15 70);
+  /* Base for shadows and image scrims, mixed with transparent at the point of use. */
+  --shadow: #14301f;
+  --scrim: #06100b;
+  --tip-bg: #13261c;
+  --tip-ink: #eef2ee;
+  /* Neutral information and work in progress, told apart from the accent by lightness as well as hue. */
+  --info: #3f6a96;
+  --radius: 3px;
+  --radius-lg: 4px;
+  --font-sans:
+    "Instrument Sans Variable", ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: "Fraunces Variable", Georgia, "Times New Roman", serif;
+  color: var(--fg);
+  background: var(--bg);
+  font-family: var(--font-sans);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #13241c;
+  --bg-soft: #182c22;
+  --surface: #1a3326;
+  --fg: #e4ebe6;
+  --fg-soft: #a3b5aa;
+  --line: #26392f;
+  --track-bg: #2e493a;
+  --accent: #8fc9a4;
+  --accent-ink: #b5ddc3;
+  --fill: #2f7d52;
+  --fill-ink: #ffffff;
+  --danger: oklch(0.72 0.15 25);
+  --warning: oklch(0.8 0.14 75);
+  --shadow: #000000;
+  --scrim: #06100b;
+  --tip-bg: #e4ebe6;
+  --tip-ink: #13241c;
+  --info: #9fb7d6;
+}
+
+/* Stacks again, so an element can show Stacks inside another scheme (the scheme picker's previews). */
+[data-color-scheme="stacks"]:not([data-theme="dark"]) {
+  --bg: #eef2ee;
+  --bg-soft: #e3eae4;
+  --surface: #f8faf8;
+  --fg: #13261c;
+  --fg-soft: #4a5f53;
+  --line: #d3dcd4;
+  --track-bg: #c3cfc5;
+  --accent: #1f6b45;
+  --accent-ink: #185a39;
+  --fill: #1f6b45;
+  --fill-ink: #ffffff;
+  --danger: oklch(0.52 0.17 25);
+  --warning: oklch(0.7 0.15 70);
+  --shadow: #14301f;
+  --scrim: #06100b;
+  --tip-bg: #13261c;
+  --tip-ink: #eef2ee;
+  --info: #3f6a96;
+}
+
+[data-color-scheme="stacks"][data-theme="dark"] {
+  --bg: #13241c;
+  --bg-soft: #182c22;
+  --surface: #1a3326;
+  --fg: #e4ebe6;
+  --fg-soft: #a3b5aa;
+  --line: #26392f;
+  --track-bg: #2e493a;
+  --accent: #8fc9a4;
+  --accent-ink: #b5ddc3;
+  --fill: #2f7d52;
+  --fill-ink: #ffffff;
+  --danger: oklch(0.72 0.15 25);
+  --warning: oklch(0.8 0.14 75);
+  --shadow: #000000;
+  --scrim: #06100b;
+  --tip-bg: #e4ebe6;
+  --tip-ink: #13241c;
+  --info: #9fb7d6;
+}
+
+/* Oxblood: red-brown leather and wine. */
+[data-color-scheme="oxblood"]:not([data-theme="dark"]) {
+  --bg: #f3eeed;
+  --bg-soft: #ebe2e0;
+  --surface: #faf7f6;
+  --fg: #2a1517;
+  --fg-soft: #64494b;
+  --line: #e0d3d1;
+  --track-bg: #d2c0be;
+  --accent: #8c2f39;
+  --accent-ink: #74242d;
+  --fill: #8c2f39;
+  --fill-ink: #ffffff;
+  --shadow: #301418;
+  --scrim: #100607;
+  --tip-bg: #2a1517;
+  --tip-ink: #f3eeed;
+  --info: #3f6a96;
+}
+
+[data-color-scheme="oxblood"][data-theme="dark"] {
+  --bg: #241517;
+  --bg-soft: #2b191c;
+  --surface: #331e21;
+  --fg: #efe3e2;
+  --fg-soft: #bba3a3;
+  --line: #3e2729;
+  --track-bg: #4d3033;
+  --accent: #e59aa0;
+  --accent-ink: #f2bfc2;
+  --fill: #9b3a44;
+  --fill-ink: #ffffff;
+  --shadow: #000000;
+  --scrim: #100607;
+  --tip-bg: #efe3e2;
+  --tip-ink: #241517;
+  --info: #9fb7d6;
+}
+
+/* Ink: blue-black ink and cool slate. Info turns teal, since blue is the accent. */
+[data-color-scheme="ink"]:not([data-theme="dark"]) {
+  --bg: #edf0f5;
+  --bg-soft: #e1e6ee;
+  --surface: #f8f9fb;
+  --fg: #131c2e;
+  --fg-soft: #4b566b;
+  --line: #d2d9e4;
+  --track-bg: #c0c9d7;
+  --accent: #2a4f8f;
+  --accent-ink: #213f74;
+  --fill: #2a4f8f;
+  --fill-ink: #ffffff;
+  --shadow: #142038;
+  --scrim: #060a12;
+  --tip-bg: #131c2e;
+  --tip-ink: #edf0f5;
+  --info: #2f7a74;
+}
+
+[data-color-scheme="ink"][data-theme="dark"] {
+  --bg: #121a2a;
+  --bg-soft: #172033;
+  --surface: #1b263c;
+  --fg: #e3e8f0;
+  --fg-soft: #a2adc0;
+  --line: #26324a;
+  --track-bg: #2f3d59;
+  --accent: #9cb7e8;
+  --accent-ink: #c3d4f3;
+  --fill: #3561a8;
+  --fill-ink: #ffffff;
+  --shadow: #000000;
+  --scrim: #060a12;
+  --tip-bg: #e3e8f0;
+  --tip-ink: #121a2a;
+  --info: #8fd0c6;
+}
+
+/* Walnut: dark wood and brass. The accent is brass; buttons are the wood. */
+[data-color-scheme="walnut"]:not([data-theme="dark"]) {
+  --bg: #eeece8;
+  --bg-soft: #e4e0d9;
+  --surface: #f8f7f4;
+  --fg: #241c13;
+  --fg-soft: #5e5346;
+  --line: #d8d2c8;
+  --track-bg: #c9c0b2;
+  --accent: #7f5810;
+  --accent-ink: #6a4a0d;
+  --fill: #5c3f26;
+  --fill-ink: #ffffff;
+  --shadow: #2c2012;
+  --scrim: #0d0905;
+  --tip-bg: #241c13;
+  --tip-ink: #eeece8;
+  --info: #3f6a96;
+}
+
+[data-color-scheme="walnut"][data-theme="dark"] {
+  --bg: #1c1712;
+  --bg-soft: #221c16;
+  --surface: #2a221a;
+  --fg: #ece5da;
+  --fg-soft: #b4a794;
+  --line: #362c22;
+  --track-bg: #45382b;
+  --accent: #d9b064;
+  --accent-ink: #ecd29a;
+  --fill: #8a6230;
+  --fill-ink: #ffffff;
+  --shadow: #000000;
+  --scrim: #0d0905;
+  --tip-bg: #ece5da;
+  --tip-ink: #1c1712;
+  --info: #9fb7d6;
+}
+
+/* Graphite: no tint, so content carries the colour. Its dark buttons are light, since a grey fill reads as disabled. */
+[data-color-scheme="graphite"]:not([data-theme="dark"]) {
+  --bg: #eff0f1;
+  --bg-soft: #e4e6e8;
+  --surface: #f9fafa;
+  --fg: #16191c;
+  --fg-soft: #50575e;
+  --line: #d6d9dc;
+  --track-bg: #c4c8cc;
+  --accent: #2e363d;
+  --accent-ink: #1f262c;
+  --fill: #262d33;
+  --fill-ink: #ffffff;
+  --shadow: #181c20;
+  --scrim: #08090a;
+  --tip-bg: #16191c;
+  --tip-ink: #eff0f1;
+  --info: #3f6a96;
+}
+
+[data-color-scheme="graphite"][data-theme="dark"] {
+  --bg: #141618;
+  --bg-soft: #191c1f;
+  --surface: #1f2326;
+  --fg: #e6e8ea;
+  --fg-soft: #a3a9ae;
+  --line: #2a2f33;
+  --track-bg: #353b40;
+  --accent: #d3d8dc;
+  --accent-ink: #eef1f3;
+  --fill: #e6e8ea;
+  --fill-ink: #141618;
+  --shadow: #000000;
+  --scrim: #08090a;
+  --tip-bg: #e6e8ea;
+  --tip-ink: #141618;
+  --info: #9fb7d6;
+}
