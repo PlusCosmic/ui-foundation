@@ -1,3 +1,9 @@
+/*
+ * The controls (buttons, fields, select, badges) are Reelshelf's, rule for rule, so it can use them without a pixel
+ * moving: inputs inherit their font from where they sit (12px bold inside a Field), the checkbox keeps the
+ * browser's margin, and the select list's shadow is neutral. Change them here and in Reelshelf together.
+ */
+
 /* ---- Buttons ---- */
 
 .ui-button,
@@ -51,11 +57,6 @@
 .ui-button:hover:not(:disabled),
 .ui-select-trigger:hover:not(:disabled) {
   border-color: color-mix(in oklab, var(--accent) 55%, var(--line));
-}
-
-.ui-button-primary:hover:not(:disabled) {
-  border-color: var(--fill);
-  background: color-mix(in oklab, var(--fill) 88%, var(--fg));
 }
 
 .ui-button-danger:hover:not(:disabled) {
@@ -146,8 +147,6 @@
   color: var(--fg);
   padding: 8px 10px;
   outline: 0;
-  font-size: 14px;
-  font-weight: 400;
 }
 
 .ui-input-compact {
@@ -173,7 +172,6 @@
   width: 15px;
   height: 15px;
   flex: 0 0 auto;
-  margin: 0;
   accent-color: var(--accent);
 }
 
@@ -253,8 +251,8 @@
   background: var(--bg);
   padding: 5px;
   box-shadow:
-    0 18px 44px color-mix(in oklab, var(--shadow) 18%, transparent),
-    0 2px 8px color-mix(in oklab, var(--shadow) 10%, transparent);
+    0 18px 44px rgba(0, 0, 0, 0.18),
+    0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .ui-select-option {
