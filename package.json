@@ -14,7 +14,9 @@
     "test": "vitest run --passWithNoTests",
     "format": "prettier --write \"**/*.{ts,tsx,js,md,css,json}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,md,css,json}\"",
-    "check": "bun run build && bun run typecheck && bun run lint && bun run test && bun run format:check"
+    "check": "bun run build && bun run typecheck && bun run lint && bun run test && bun run format:check",
+    "check:rune-theme": "node rune/theme/tools/theme.mjs --check",
+    "generate:rune-theme": "node rune/theme/tools/theme.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -26,6 +28,7 @@
     "eslint": "^10.11.0",
     "eslint-config-prettier": "^10.1.8",
     "jsdom": "^30.1.0",
+    "playwright": "^1.63.0",
     "prettier": "^3.9.8",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.70.0",
