@@ -70,6 +70,8 @@ fn view(s: &App, cx: &mut Cx<App>) -> El {
 
 - Only Fraunces Medium upright is bundled, so the wordmark and display `<em>` aren't italic yet; add the static
   italic TTF to `assets/fonts/` and a `DISPLAY_ITALIC` style.
+- The code face (`FAMILIES.1`, JetBrains Mono NL) is Rune-only: the web has no `--font-mono` token yet, so code there
+  is the browser's monospace.
 - `rune-kit`'s `Danger` button is a soft button with red text, where the web fills it red.
 - The dialog's backdrop is `rune-kit`'s dark scrim, not the web's blurred veil.
 - The theme maps the kit's commonest roles; anything unmapped falls back to `Kit::from_palette_focus`, derived from

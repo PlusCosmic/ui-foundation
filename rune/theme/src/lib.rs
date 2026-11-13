@@ -73,15 +73,20 @@ impl ColorScheme {
     }
 }
 
-/// Instrument Sans (regular and semibold) and Fraunces (medium), for `AppSpec::fonts`.
+/// Instrument Sans (regular and semibold), Fraunces (medium) and JetBrains Mono NL (regular and semibold), for
+/// `AppSpec::fonts`.
 pub const FONTS: &[&[u8]] = &[
     include_bytes!("../assets/fonts/InstrumentSans-Regular.ttf"),
     include_bytes!("../assets/fonts/InstrumentSans-SemiBold.ttf"),
     include_bytes!("../assets/fonts/Fraunces-Medium.ttf"),
+    include_bytes!("../assets/fonts/JetBrainsMonoNL-Regular.ttf"),
+    include_bytes!("../assets/fonts/JetBrainsMonoNL-SemiBold.ttf"),
 ];
 
-/// `AppSpec::families`: (sans, mono). The foundation sets no code face, so both are the sans.
-pub const FAMILIES: (&str, &str) = ("Instrument Sans", "Instrument Sans");
+/// `AppSpec::families`: (sans, mono). The code face is bundled rather than the platform's so text measured by
+/// another engine (an HTML layout, say) in the same font lands where Rune draws it; the no-ligature cut keeps `->`
+/// and `!=` as typed.
+pub const FAMILIES: (&str, &str) = ("Instrument Sans", "JetBrains Mono NL");
 
 /// The display face, for headings and the wordmark.
 pub const DISPLAY: Family = Family::Named("Fraunces");
